@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 240" fill="none">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&amp;family=Caveat:wght@700&amp;display=swap');
+      .brand-title {
+        font-family: 'Permanent Marker', cursive, sans-serif;
+        font-size: 82px;
+        fill: #ffffff;
+        letter-spacing: 2px;
+        font-weight: 900;
+        transform: rotate(-6deg);
+        transform-origin: 200px 100px;
+      }
+      .brand-subtitle {
+        font-family: 'Caveat', cursive, sans-serif;
+        font-size: 26px;
+        fill: #070d1e;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        transform: rotate(-6deg);
+        transform-origin: 200px 150px;
+      }
+    </style>
+  </defs>
+
+  <!-- Background brush stroke underline -->
+  <path d="M 60 165 C 130 148, 250 142, 440 155 C 380 180, 220 185, 70 185 Z" fill="#ffffff" transform="rotate(-6 250 160)" />
+
+  <!-- Main text: NODEKICKS -->
+  <text x="70" y="115" class="brand-title">NODEKICKS</text>
+
+  <!-- Subtitle on brush stroke: Shoe Cleaning & Treatment -->
+  <text x="110" y="165" class="brand-subtitle">Shoe Cleaning &amp; Treatment</text>
+</svg>
