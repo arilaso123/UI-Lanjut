@@ -60,9 +60,15 @@ const routes = [
     children: [
       {
         path: '',
-        name: 'dashboard',
+        name: 'dashboard-overview',
         component: () => import('@/views/Dashboard.vue'),
         meta: { breadcrumb: 'Dashboard' },
+      },
+      {
+        path: 'events',
+        name: 'dashboard-events',
+        component: () => import('@/views/EventManagement.vue'),
+        meta: { breadcrumb: 'Event Management' },
       },
     ],
   },
