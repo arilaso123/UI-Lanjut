@@ -1,22 +1,21 @@
 <script setup>
-import { computed } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { useEvents } from '@/composables/useEvents';
-import AppButton from '@/components/ui/AppButton.vue';
-import AppCard from '@/components/ui/AppCard.vue';
+import { computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useEvents } from '@/composables/useEvents'
+import AppButton from '@/components/ui/AppButton.vue'
+import AppCard from '@/components/ui/AppCard.vue'
 
-const route = useRoute();
-const router = useRouter();
-const { getEventById } = useEvents();
+const route = useRoute()
+const router = useRouter()
+const { getEventById } = useEvents()
 
-const event = computed(() => getEventById(route.params.id));
+const event = computed(() => getEventById(route.params.id))
+const alert = window.alert
 </script>
 
 <template>
   <div v-if="event" class="event-detail-page">
-    <button class="btn-back" @click="router.push('/browse/events')">
-      ← Back to Events
-    </button>
+    <button class="btn-back" @click="router.push('/browse/events')">← Back to Events</button>
 
     <div class="detail-header">
       <div class="header-tags">
@@ -64,18 +63,11 @@ const event = computed(() => getEventById(route.params.id));
           >
             Register Now
           </AppButton>
-          <AppButton
-            v-else
-            variant="secondary"
-            class="btn-register btn-disabled"
-            disabled
-          >
+          <AppButton v-else variant="secondary" class="btn-register btn-disabled" disabled>
             Registration Closed
           </AppButton>
 
-          <p v-if="!event.done" class="ticket-note">
-            Only {{ event.quota }} seats available!
-          </p>
+          <p v-if="!event.done" class="ticket-note">Only {{ event.quota }} seats available!</p>
         </AppCard>
       </div>
     </div>

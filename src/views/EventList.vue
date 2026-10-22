@@ -1,53 +1,50 @@
 <script setup>
-import { ref, computed } from 'vue';
-import { useRouter } from 'vue-router';
-import { useEvents } from '@/composables/useEvents';
-import EventCard from '@/components/event/EventCard.vue';
-import SearchBar from '@/components/event/SearchBar.vue';
-import CategoryFilter from '@/components/event/CategoryFilter.vue';
-import AppButton from '@/components/ui/AppButton.vue';
+import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { useEvents } from '@/composables/useEvents'
+import EventCard from '@/components/event/EventCard.vue'
+import SearchBar from '@/components/event/SearchBar.vue'
+import CategoryFilter from '@/components/event/CategoryFilter.vue'
+import AppButton from '@/components/ui/AppButton.vue'
 
-const router = useRouter();
-const { activeEvents } = useEvents();
+const router = useRouter()
+const { activeEvents } = useEvents()
 
-const searchQuery = ref('');
-const selectedCategory = ref('All');
-const categories = ['All', 'Workshop', 'Meetup', 'Competition', 'Seminar', 'Conference'];
+const searchQuery = ref('')
+const selectedCategory = ref('All')
+const categories = ['All', 'Workshop', 'Meetup', 'Competition', 'Seminar', 'Conference']
 
 const filteredEvents = computed(() => {
   return activeEvents.value.filter((event) => {
     const matchesSearch =
       event.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      event.loc.toLowerCase().includes(searchQuery.value.toLowerCase());
-    const matchesCategory =
-      selectedCategory.value === 'All' ||
-      (event.cat || event.category) === selectedCategory.value;
-    return matchesSearch && matchesCategory;
-  });
-});
+      event.loc.toLowerCase().includes(searchQuery.value.toLowerCase())
+    const matchesCategory = selectedCategory.value === 'All' || event.cat === selectedCategory.value
+    return matchesSearch && matchesCategory
+  })
+})
 
 const handleViewDetail = (id) => {
-  router.push(`/browse/events/${id}`);
-};
+  router.push(`/browse/events/${id}`)
+}
 </script>
 
 <template>
   <div class="event-list-page">
-    <div class="event-list-header">
-      <h1>Upcoming Events</h1>
-      <p>Discover workshops, tech meetups, and competitions near you.</p>
+    <div class="header-section">
+      <h2 class="section-title">Upcoming Events</h2>
+      <p class="section-desc">
+        Discover workshops, seminars, tech meetups, and competitions near you.
+      </p>
     </div>
 
-    <div class="filters-area">
+    <div class="filters-section">
       <SearchBar v-model="searchQuery" />
-      <CategoryFilter
-        :categories="categories"
-        v-model="selectedCategory"
-      />
+      <CategoryFilter :categories="categories" v-model="selectedCategory" />
     </div>
 
-    <!-- POPULATED STATE -->
-    <div v-if="filteredEvents.length > 0" class="events-grid">
+    <!-- GRID EVENT AKTIF -->
+    <div v-if="filteredEvents.length > 0" class="event-grid">
       <EventCard
         v-for="event in filteredEvents"
         :key="event.id"
@@ -57,74 +54,78 @@ const handleViewDetail = (id) => {
     </div>
 
     <!-- FRIENDLY EMPTY STATE -->
-    <div v-else class="empty-state-card">
-      <div class="empty-illustration">📭</div>
-      <h3 class="empty-title">No Events Available Yet</h3>
-      <p class="empty-description">
-        There are currently no active events scheduled. Please check back later or
-        publish your own event from the organizer dashboard.
+    <div v-else class="empty-state">
+      <div class="empty-icon">📭</div>
+      <h3>No Events Available Yet</h3>
+      <p>
+        There are currently no active events scheduled. Are you an organizer? Publish and manage
+        your first event today through the Dashboard!
       </p>
-      <AppButton variant="primary" @click="router.push('/dashboard/events')">
-        Go to Organizer Dashboard &rarr;
-      </AppButton>
+      <div class="empty-action">
+        <AppButton variant="primary" @click="router.push('/dashboard')">
+          Go to Organizer Dashboard &rarr;
+        </AppButton>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.event-list-header {
+.header-section {
   margin-bottom: var(--space-8);
 }
-
-.event-list-header h1 {
+.section-title {
   font-size: 2.2rem;
   margin-bottom: var(--space-2);
 }
-
-.event-list-header p {
+.section-desc {
   color: var(--text-muted);
   font-size: 1.1rem;
 }
 
-.filters-area {
+.filters-section {
   margin-bottom: var(--space-6);
 }
 
-.events-grid {
+/* ADAPTIVE GRID */
+.event-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: var(--space-6);
 }
 
-.empty-state-card {
+/* FRIENDLY EMPTY STATE */
+.empty-state {
   text-align: center;
-  padding: var(--space-12) var(--space-6);
+  padding: var(--space-12) var(--space-8);
+  color: var(--text-muted);
   background: white;
-  border: 1px solid var(--border-color);
   border-radius: var(--space-4);
+  border: 1px dashed var(--border-color);
   max-width: 600px;
   margin: var(--space-8) auto;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
 }
 
-.empty-illustration {
+.empty-icon {
   font-size: 3.5rem;
   margin-bottom: var(--space-3);
 }
 
-.empty-title {
+.empty-state h3 {
   font-size: 1.5rem;
   color: var(--text-main);
   margin-bottom: var(--space-2);
 }
 
-.empty-description {
-  color: var(--text-muted);
-  font-size: 1rem;
+.empty-state p {
   line-height: 1.6;
   margin-bottom: var(--space-6);
-  max-width: 480px;
-  margin-left: auto;
-  margin-right: auto;
+  font-size: 1rem;
+}
+
+.empty-action {
+  display: flex;
+  justify-content: center;
 }
 </style>
