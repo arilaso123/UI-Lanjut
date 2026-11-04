@@ -1,48 +1,52 @@
 <script setup>
-import { ref, computed } from 'vue';
-import { useRouter } from 'vue-router';
-import { useEvents } from '@/composables/useEvents';
-import AppCard from '@/components/ui/AppCard.vue';
-import AppButton from '@/components/ui/AppButton.vue';
-import AppModal from '@/components/ui/AppModal.vue';
+import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { useEvents } from '@/composables/useEvents'
+import AppCard from '@/components/ui/AppCard.vue'
+import AppButton from '@/components/ui/AppButton.vue'
+import AppModal from '@/components/ui/AppModal.vue'
 
-const router = useRouter();
-const { userRegistrations, cancelRegistration, getEventById, events } = useEvents();
+const router = useRouter()
+const { userRegistrations, cancelRegistration, getEventById, events } = useEvents()
 
 // HANYA MENAMPILKAN PENDAFTARAN DARI EVENT YANG MASIH ADA DI SISTEM
 const activeRegistrations = computed(() => {
-  return userRegistrations.value.filter(r => events.value.some(e => e.id === r.eventId));
-});
+  return userRegistrations.value.filter((r) =>
+    events.value.some((e) => String(e.id) === String(r.eventId)),
+  )
+})
 
 // MEMERIKSA STATUS SELESAI EVENT DARI ORGANIZER DASHBOARD SECARA REAKTIF
 const isEventDone = (eventId) => {
-  const ev = getEventById(eventId);
-  return ev ? ev.done : false;
-};
+  const ev = getEventById(eventId)
+  return ev ? ev.done : false
+}
 
 // STATE MODAL PEMBATALAN
-const isCancelModalOpen = ref(false);
-const eventToCancel = ref(null);
+const isCancelModalOpen = ref(false)
+const eventToCancel = ref(null)
 
 const handleOpenCancelModal = (eventId) => {
-  eventToCancel.value = eventId;
-  isCancelModalOpen.value = true;
-};
+  eventToCancel.value = eventId
+  isCancelModalOpen.value = true
+}
 
 const handleConfirmCancel = () => {
   if (eventToCancel.value) {
-    cancelRegistration(eventToCancel.value);
-    isCancelModalOpen.value = false;
-    eventToCancel.value = null;
+    cancelRegistration(eventToCancel.value)
+    isCancelModalOpen.value = false
+    eventToCancel.value = null
   }
-};
+}
 </script>
 
 <template>
   <div class="your-events-container">
     <header class="page-header">
       <h2 class="page-title">Your Events</h2>
-      <p class="page-desc">Review your confirmed event registrations and view official digital passes.</p>
+      <p class="page-desc">
+        Review your confirmed event registrations and view official digital passes.
+      </p>
     </header>
 
     <!-- EMPTY STATE: JIKA BELUM ADA EVENT YANG DIDAFTAR ATAU SUDAH DIHAPUS -->
@@ -64,7 +68,12 @@ const handleConfirmCancel = () => {
         <div class="card-top">
           <div class="top-left">
             <span class="category-tag">{{ item.eventCat }}</span>
-            <span :class="['lifecycle-tag', isEventDone(item.eventId) ? 'tag-concluded' : 'tag-upcoming']">
+            <span
+              :class="[
+                'lifecycle-tag',
+                isEventDone(item.eventId) ? 'tag-concluded' : 'tag-upcoming',
+              ]"
+            >
               {{ isEventDone(item.eventId) ? 'CONCLUDED' : 'UPCOMING' }}
             </span>
           </div>
@@ -80,7 +89,10 @@ const handleConfirmCancel = () => {
         </div>
 
         <div class="card-bottom">
-          <button class="btn-view-ticket" @click="router.push(`/browse/your-events/${item.eventId}`)">
+          <button
+            class="btn-view-ticket"
+            @click="router.push(`/browse/your-events/${item.eventId}`)"
+          >
             View Ticket Details &rarr;
           </button>
 
