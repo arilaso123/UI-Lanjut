@@ -1,43 +1,43 @@
 <script setup>
-import { computed, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { useEvents } from '@/composables/useEvents';
-import AppModal from '@/components/ui/AppModal.vue';
+import { computed, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useEvents } from '@/composables/useEvents'
+import AppModal from '@/components/ui/AppModal.vue'
 
-const route = useRoute();
-const router = useRouter();
-const { userRegistrations, cancelRegistration, getEventById, events } = useEvents();
+const route = useRoute()
+const router = useRouter()
+const { userRegistrations, cancelRegistration, getEventById, events } = useEvents()
 
-const eventId = computed(() => Number(route.params.id));
+const eventId = computed(() => route.params.id)
 
 // MENGAMBIL DATA TIKET JIKA EVENT MASIH ADA DI SISTEM
 const activeTicket = computed(() => {
-  if (!eventId.value) return null;
-  const eventExists = events.value.some(e => e.id === eventId.value);
-  if (!eventExists) return null;
-  return userRegistrations.value.find(r => r.eventId === eventId.value);
-});
+  if (!eventId.value) return null
+  const eventExists = events.value.some((e) => String(e.id) === String(eventId.value))
+  if (!eventExists) return null
+  return userRegistrations.value.find((r) => String(r.eventId) === String(eventId.value))
+})
 
 // MEMERIKSA STATUS SELESAI EVENT SECARA REAKTIF
 const isEventDone = (id) => {
-  const ev = getEventById(id);
-  return ev ? ev.done : false;
-};
+  const ev = getEventById(id)
+  return ev ? ev.done : false
+}
 
 // STATE MODAL PEMBATALAN TIKET
-const isCancelModalOpen = ref(false);
+const isCancelModalOpen = ref(false)
 
 const handleOpenCancelModal = () => {
-  isCancelModalOpen.value = true;
-};
+  isCancelModalOpen.value = true
+}
 
 const handleConfirmCancel = () => {
   if (eventId.value) {
-    cancelRegistration(eventId.value);
-    isCancelModalOpen.value = false;
-    router.push('/browse/your-events');
+    cancelRegistration(eventId.value)
+    isCancelModalOpen.value = false
+    router.push('/browse/your-events')
   }
-};
+}
 </script>
 
 <template>
@@ -50,13 +50,25 @@ const handleConfirmCancel = () => {
     <div v-if="activeTicket" class="ticket-receipt-card">
       <header class="receipt-header">
         <div class="header-status">
-          <span :class="['status-badge', isEventDone(activeTicket.eventId) ? 'badge-concluded' : 'badge-confirmed']">
+          <span
+            :class="[
+              'status-badge',
+              isEventDone(activeTicket.eventId) ? 'badge-concluded' : 'badge-confirmed',
+            ]"
+          >
             {{ isEventDone(activeTicket.eventId) ? 'EVENT CONCLUDED' : 'CONFIRMED PASS' }}
           </span>
           <span class="ref-code">#{{ activeTicket.bookingCode }}</span>
         </div>
         <p class="receipt-meta-date">
-          Registered on {{ new Date(activeTicket.registeredAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) }}
+          Registered on
+          {{
+            new Date(activeTicket.registeredAt).toLocaleDateString('en-US', {
+              month: 'short',
+              day: 'numeric',
+              year: 'numeric',
+            })
+          }}
         </p>
       </header>
 
